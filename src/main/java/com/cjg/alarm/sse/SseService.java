@@ -24,10 +24,10 @@ public class SseService {
 	}
 	
 	public void send(String userId, String message) {
-		SseEmitter sseEmitter = sseEmitters.get(userId);
+		SseEmitter emitter = sseEmitters.get(userId);
 		
 		try {
-			sseEmitter.event().name("alarm").data(message);
+			emitter.send(SseEmitter.event().name("alarm").data(message));   
 		}catch(Exception e) {
 			logger.error(e.toString());
 			sseEmitters.remove(userId);

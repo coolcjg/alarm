@@ -27,14 +27,9 @@ public class SseController {
 		//현재 클라이언트를 위한 SssEmitter 생성
 		SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
 		
-		try {
-			emitter.send(SseEmitter.event().name("connect"));
-		}catch(IOException e) {
-			logger.error(e.toString());
-		}
-		
 		sseService.saveEmitter(userId, emitter);
-			
+		sseService.send(userId, "hello world");
+		
 		emitter.onCompletion(() -> sseService.removeEmitter(userId));
 		emitter.onTimeout(()->sseService.removeEmitter(userId));
 		emitter.onError((e) -> sseService.removeEmitter(userId));
