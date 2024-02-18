@@ -26,12 +26,17 @@ public class SseService {
 	public void send(String userId, String message) {
 		SseEmitter emitter = sseEmitters.get(userId);
 		
-		try {
-			emitter.send(SseEmitter.event().name("alarm").data(message));   
-		}catch(Exception e) {
-			logger.error(e.toString());
-			sseEmitters.remove(userId);
+		if(emitter != null) {
+			try {
+				emitter.send(SseEmitter.event().name("alarm").data(message));
+			}catch(Exception e) {
+				logger.error(e.toString());
+				sseEmitters.remove(userId);
+			}			
+		}else {
+			logger.info("emitter is null");
 		}
+
 		
 	}
 
