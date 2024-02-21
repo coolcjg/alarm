@@ -1,7 +1,5 @@
 package com.cjg.alarm.sse;
 
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -10,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +29,16 @@ public class SseController {
 		SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
 		
 		sseService.saveEmitter(userId, emitter);
-		sseService.send(userId, "hello world");
+		
+		Gson gson = new Gson();
+		
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("type", "접속");
+		jsonObject.addProperty("message", "hello world");
+		
+		String jsonStr = gson.toJson(jsonObject);
+		
+		sseService.send(userId, jsonStr);
 		
 		emitter.onCompletion(() -> sseService.removeEmitter(userId));
 		emitter.onTimeout(()->sseService.removeEmitter(userId));
