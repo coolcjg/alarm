@@ -27,10 +27,9 @@ public class RedisSubscriber implements MessageListener {
 		logger.info("redis sub message {}", publishMessage);
 		
 		JsonObject jo = JsonParser.parseString(publishMessage).getAsJsonObject();	
-		JsonObject board = jo.get("kafkaBoardDto").getAsJsonObject();
-		String userId = board.get("userId").getAsString();
+		String toUserId = jo.get("toUserId").getAsString();
 				
-		sseService.send(userId, publishMessage);
+		sseService.send(toUserId, publishMessage);
 	}
 
 }
