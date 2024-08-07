@@ -18,7 +18,8 @@ public class RedisPublisher {
 	private final RedisTemplate<String, Object> redisTemplate;
 	
 	public void sendMessage(String message) {
-		redisTemplate.convertAndSend(channelTopic.getTopic(), message);
+		long result = redisTemplate.convertAndSend(channelTopic.getTopic(), message);
+		System.out.println("result : " + result);
 	}	
 
 }
